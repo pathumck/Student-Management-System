@@ -152,11 +152,24 @@ public class StudentController extends HttpServlet {
         String stuEmail = jsonObject.getString("email");
         String stuCity = jsonObject.getString("city");
         String stuLevel = jsonObject.getString("level");
-        System.out.println(stuId);
-        System.out.println(stuName);
-        System.out.println(stuEmail);
-        System.out.println(stuCity);
-        System.out.println(stuLevel);
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STUDENT);
+            preparedStatement.setString(1,stuName);
+            preparedStatement.setString(2,stuEmail);
+            preparedStatement.setString(3,stuCity);
+            preparedStatement.setString(4,stuLevel);
+            preparedStatement.setString(5,stuId);
+
+            if (preparedStatement.executeUpdate() != 0) {
+                resp.getWriter().write("Update student Successfully !!!");
+            } else {
+                resp.getWriter().write("unable to Update !! Please try again !!!");
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 }
