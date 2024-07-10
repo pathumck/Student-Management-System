@@ -14,6 +14,7 @@ import lk.ijse.studentmanagementmain.dto.StudentDTO;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.CharBuffer;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -107,8 +108,12 @@ public class StudentController extends HttpServlet {
                 studentDTO.setLevel( resultSet.getString("level"));
             }
             System.out.println(studentDTO);
-            resp.getWriter().write(studentDTO.toString());
-            System.out.println("all clear");
+            if (studentDTO.getId()==null){
+                resp.getWriter().write("Wrong Id Please try again !!!");
+            }else {
+                resp.getWriter().write(studentDTO.toString());
+                System.out.println("all clear");
+            }
 
         }catch (Exception e){
             e.printStackTrace();
