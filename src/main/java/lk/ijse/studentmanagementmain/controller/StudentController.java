@@ -24,6 +24,7 @@ public class StudentController extends HttpServlet {
     Connection connection;
     static String SAVE_STUDENT = "INSERT INTO students(id,name,city,email,level)VALUE(?,?,?,?,?)";
     static String GET_STUDENT = "SELECT * FROM students WHERE id = ?";
+    static String DELETE = "DELETE FROM students WHERE id = ?";
 
     @Override
     public void init() throws ServletException {
@@ -51,10 +52,6 @@ public class StudentController extends HttpServlet {
             resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
         }
         try {
-           /* if (!"application/json".equalsIgnoreCase(req.getContentType())) {
-                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Expected content type: application/json");
-                return;
-            }*/
         String id = UUID.randomUUID().toString();
         Jsonb jsonb = JsonbBuilder.create();
         List<StudentDTO> studentDTO = jsonb.fromJson(req.getReader(), new ArrayList<StudentDTO>() {
@@ -119,7 +116,26 @@ public class StudentController extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (!req.getContentType().toLowerCase().startsWith("application/json") || req.getContentType() == null) {
+//            send error
+            resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
+        }
+        JsonReader reader = Json.createReader(req.getReader());
+        JsonObject jsonObject = reader.readObject();
+        String stuId = jsonObject.getString("id");
+        System.out.println(stuId);
 
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(DELETE);
+            preparedStatement.setString(1,stuId);
+            if (preparedStatement.executeUpdate()>0){
+                resp.getWriter().write(stuId+" : Delete successfully!!!");
+            }else {
+                resp.getWriter().write("Some thing wrong!! Please Try again!!!");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
