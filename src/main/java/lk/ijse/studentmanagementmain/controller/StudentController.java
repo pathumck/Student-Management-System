@@ -25,6 +25,7 @@ public class StudentController extends HttpServlet {
     static String SAVE_STUDENT = "INSERT INTO students(id,name,city,email,level)VALUE(?,?,?,?,?)";
     static String GET_STUDENT = "SELECT * FROM students WHERE id = ?";
     static String DELETE = "DELETE FROM students WHERE id = ?";
+    static String UPDATE_STUDENT = "UPDATE students SET name =? , city = ?, email =?,level=? WHERE id = ?";
 
     @Override
     public void init() throws ServletException {
@@ -140,6 +141,22 @@ public class StudentController extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (!req.getContentType().toLowerCase().startsWith("application/json") || req.getContentType() == null) {
+//            send error
+            resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
+        }
+        JsonReader reader = Json.createReader(req.getReader());
+        JsonObject jsonObject = reader.readObject();
+        String stuId = jsonObject.getString("id");
+        String stuName = jsonObject.getString("name");
+        String stuEmail = jsonObject.getString("email");
+        String stuCity = jsonObject.getString("city");
+        String stuLevel = jsonObject.getString("level");
+        System.out.println(stuId);
+        System.out.println(stuName);
+        System.out.println(stuEmail);
+        System.out.println(stuCity);
+        System.out.println(stuLevel);
 
     }
 }
