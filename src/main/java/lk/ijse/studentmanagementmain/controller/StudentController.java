@@ -126,10 +126,11 @@ public class StudentController extends HttpServlet {
 //            send error
             resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
         }
-        JsonReader reader = Json.createReader(req.getReader());
+        /*JsonReader reader = Json.createReader(req.getReader());
         JsonObject jsonObject = reader.readObject();
         String stuId = jsonObject.getString("id");
-        System.out.println(stuId);
+        System.out.println(stuId);*/
+        String stuId = req.getParameter("id");
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(DELETE);
