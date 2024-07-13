@@ -56,15 +56,20 @@ public class StudentController extends HttpServlet {
             resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
         }
         try {
-        String id = UUID.randomUUID().toString();
+        /*String id = UUID.randomUUID().toString();*/
         Jsonb jsonb = JsonbBuilder.create();
-        List<StudentDTO> studentDTO = jsonb.fromJson(req.getReader(), new ArrayList<StudentDTO>() {
+        List<StudentDTO> studentDTOs = jsonb.fromJson(req.getReader(), new ArrayList<StudentDTO>() {
         }.getClass().getGenericSuperclass());
 
-        studentDTO.forEach(System.out::println);
+        studentDTOs.forEach(System.out::println);
         //persist student data
-
-        PreparedStatement preparedStatement = connection.prepareStatement(SAVE_STUDENT);
+            boolean isSaved = studentData.saveStudent(studentDTOs,connection);
+            if (isSaved) {
+                resp.getWriter().write("Save student");
+            } else {
+                resp.getWriter().write("unable to save student");
+            }
+        /*PreparedStatement preparedStatement = connection.prepareStatement(SAVE_STUDENT);
         for (StudentDTO stu : studentDTO) {
             preparedStatement.setString(1, stu.getId());
             preparedStatement.setString(2, stu.getName());
@@ -77,7 +82,7 @@ public class StudentController extends HttpServlet {
             } else {
                 resp.getWriter().write("unable to save student");
             }
-        }
+        }*/
 
     }catch(
     Exception e)
@@ -119,10 +124,6 @@ public class StudentController extends HttpServlet {
 //            send error
             resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
         }
-        /*JsonReader reader = Json.createReader(req.getReader());
-        JsonObject jsonObject = reader.readObject();
-        String stuId = jsonObject.getString("id");
-        System.out.println(stuId);*/
         String stuId = req.getParameter("id");
 
         try {
