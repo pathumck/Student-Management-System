@@ -10,6 +10,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lk.ijse.studentmanagementmain.dao.StudentData;
+import lk.ijse.studentmanagementmain.dao.impl.StudentDataProcess;
 import lk.ijse.studentmanagementmain.dto.StudentDTO;
 
 import java.io.IOException;
@@ -27,7 +29,7 @@ public class StudentController extends HttpServlet {
     static String GET_STUDENT = "SELECT * FROM students WHERE id = ?";
     static String DELETE = "DELETE FROM students WHERE id = ?";
     static String UPDATE_STUDENT = "UPDATE students SET name =? , city = ?, email =?,level=? WHERE id = ?";
-
+    StudentData studentData = new StudentDataProcess();
     @Override
     public void init() throws ServletException {
         try {
@@ -97,16 +99,7 @@ public class StudentController extends HttpServlet {
         System.out.println(stuId);
         StudentDTO studentDTO = new StudentDTO();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(GET_STUDENT);
-            preparedStatement.setString(1, stuId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()){
-                studentDTO.setId(resultSet.getString("id"));
-                studentDTO.setName(resultSet.getString("name"));
-                studentDTO.setEmail( resultSet.getString("email"));
-                studentDTO.setCity( resultSet.getString("city"));
-                studentDTO.setLevel( resultSet.getString("level"));
-            }
+            studentDTO = studentData.getStudent(stuId,connection);
             System.out.println(studentDTO);
             if (studentDTO.getId()==null){
                 resp.getWriter().write("Wrong Id Please try again !!!");
