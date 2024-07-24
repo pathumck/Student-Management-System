@@ -9,7 +9,7 @@
     </context-param>
     <context-param>
         <param-name>dbURL</param-name>
-        <param-value>jdbc:mysql://localhost:3306/tomcatDB?createDatabaseIfNotExist=true</param-value>
+        <param-value>jdbc:mysql://localhost:3306/aad67javaee?createDatabaseIfNotExist=true</param-value>
     </context-param>
     <context-param>
         <param-name>dbUserName</param-name>
